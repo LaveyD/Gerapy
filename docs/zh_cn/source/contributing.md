@@ -80,7 +80,7 @@ npm run serve
 
 ## 代码说明
 
-后端基于 Django 开发，使用的数据库为 SQLite，其主要逻辑在 backend 文件夹。
+后端基于 Django 开发，默认使用 PostgreSQL（可通过 `GERAPY_SQLITE_COMPAT=true` 开启 SQLite 兼容模式），其主要逻辑在 backend 文件夹。
 
 前端基于 Vue.js 开发，其主要逻辑在 frontend 文件夹。
 

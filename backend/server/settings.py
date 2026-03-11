@@ -90,12 +90,34 @@ os.path.exists(DB_DIR) or os.makedirs(DB_DIR)
 
 DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_PATH,
+
+def str2bool(value, default=False):
+    if value is None:
+        return default
+    return str(value).lower() in ('1', 'true', 'yes', 'on')
+
+
+SQLITE_COMPAT_MODE = str2bool(os.getenv('GERAPY_SQLITE_COMPAT'))
+DB_ENGINE = os.getenv('GERAPY_DB_ENGINE', 'postgresql').lower()
+
+if SQLITE_COMPAT_MODE or DB_ENGINE == 'sqlite':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': DB_PATH,
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('GERAPY_DB_NAME', 'gerapy'),
+            'USER': os.getenv('GERAPY_DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('GERAPY_DB_PASSWORD', ''),
+            'HOST': os.getenv('GERAPY_DB_HOST', '127.0.0.1'),
+            'PORT': os.getenv('GERAPY_DB_PORT', '5432'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
