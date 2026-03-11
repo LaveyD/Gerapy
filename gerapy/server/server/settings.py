@@ -82,20 +82,36 @@ WSGI_APPLICATION = 'gerapy.server.server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DB_SUBDIR = 'dbs'
-DB_DIR = os.path.join(os.getcwd(), DB_SUBDIR)
+DB_ENGINE = os.getenv('DB_ENGINE', 'django.db.backends.postgresql')
 
-# Create DB dir if it does not exist
-os.path.exists(DB_DIR) or os.makedirs(DB_DIR)
-
-DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_PATH,
+if DB_ENGINE == 'django.db.backends.sqlite3':
+    DB_SUBDIR = 'dbs'
+    DB_DIR = os.path.join(os.getcwd(), DB_SUBDIR)
+    # Create DB dir if it does not exist
+    os.path.exists(DB_DIR) or os.makedirs(DB_DIR)
+    DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'NAME': DB_PATH,
+        }
     }
-}
+else:
+    db_port_raw = os.getenv('DB_PORT', '5432')
+    try:
+        database_port = int(db_port_raw)
+    except ValueError as error:
+        raise ValueError(f'DB_PORT must be an integer, got: {db_port_raw}') from error
+    DATABASES = {
+        'default': {
+            'ENGINE': DB_ENGINE,
+            'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+            'PORT': database_port,
+            'NAME': os.getenv('DB_NAME', 'gerapy'),
+            'USER': os.getenv('DB_USER', 'gerapy'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

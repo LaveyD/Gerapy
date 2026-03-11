@@ -2,15 +2,35 @@ version: "3.9"
 
 services:
 
+  postgres:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: gerapy
+      POSTGRES_USER: gerapy
+      POSTGRES_PASSWORD: gerapy
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
   gerapy:
     image: germey/gerapy
     build: .
     container_name: gerapy
     restart: always
+    depends_on:
+      - postgres
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: gerapy
+      DB_USER: gerapy
+      DB_PASSWORD: gerapy
     volumes:
       - gerapy:/home/gerapy
     ports:
       - 8000:8000
 
 volumes:
+  postgres:
   gerapy:

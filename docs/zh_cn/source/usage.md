@@ -39,21 +39,20 @@ cd gerapy
 gerapy migrate
 ```
 
-这样即会生成一个 SQLite 数据库，数据库中会用于保存各个主机配置信息、部署版本、定时任务等。
+默认情况下，这一步会在 PostgreSQL 中初始化表结构，用于保存各个主机配置信息、部署版本、定时任务等。
 
-这时候可以发现工作目录下又多了一个文件夹：
+如果切换为 SQLite 兼容模式（`DB_ENGINE=django.db.backends.sqlite3`），这时候可以发现工作目录下又多了一个文件夹：
 
-* dbs，用于存放 Gerapy 运行时所需的数据库。
+* dbs，用于存放 Gerapy 运行时所需的 SQLite 数据库。
 
 ### 前后端数据库目录与配置定位
 
 如果需要排查 Gerapy 的前后端数据库位置和配置，可以直接看下面几个文件：
 
 * 后端数据库配置文件：`gerapy/server/server/settings.py`
-  * `DB_SUBDIR = 'dbs'`
-  * `DB_DIR = os.path.join(os.getcwd(), DB_SUBDIR)`
-  * `DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')`
-  * `DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'`
+  * 默认 `DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'`
+  * 相关环境变量：`DB_HOST`、`DB_PORT`、`DB_NAME`、`DB_USER`、`DB_PASSWORD`
+  * 可选 SQLite 兼容模式：`DB_ENGINE=django.db.backends.sqlite3`
 * 后端业务数据模型：`gerapy/server/core/models.py`（项目配置、任务、主机、部署记录等都在这里对应的表里）
 * 前端代码目录：`gerapy/client`，前端是 Vue 单页应用，不单独持久化数据库，数据通过 `/api/*` 请求后端
   * 开发代理配置：`gerapy/client/vue.config.js`（默认代理到 `http://localhost:8000`）
@@ -61,7 +60,7 @@ gerapy migrate
   * 模板：`gerapy/templates/spiders/crawl.tmpl`
   * 管道实现：`gerapy/pipelines/mysql.py`、`gerapy/pipelines/mongodb.py`
 
-> 说明：Gerapy 平台自身（Django）默认只使用 SQLite；MySQL / MongoDB 是给生成后的 Scrapy 项目做数据落地使用，不是 Gerapy 管理后台本身的元数据库。
+> 说明：Gerapy 平台自身（Django）默认使用 PostgreSQL；MySQL / MongoDB 是给生成后的 Scrapy 项目做数据落地使用，不是 Gerapy 管理后台本身的元数据库。
 
 ### 前后端数据库拆分独立部署方案
 

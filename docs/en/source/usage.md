@@ -39,21 +39,20 @@ At this point, first initialize the database, execute the following command:
 gerapy migrate
 ```
 
-This will generate a SQLite database, which will be used to save each host configuration information, deployment version, timing tasks, and so on.
+By default this will initialize PostgreSQL tables for host configuration information, deployment versions, timing tasks, and so on.
 
-At this time, you can find another folder in the working directory:
+If you switch to SQLite compatibility mode (`DB_ENGINE=django.db.backends.sqlite3`), you can find another folder in the working directory:
 
-* dbs, which is used to store the database required by the Gerapy runtime.
+* dbs, which is used to store the SQLite database required by the Gerapy runtime.
 
 ### Frontend/Backend DB Paths and Config Entry Points
 
 If you need to locate database-related paths and config quickly, check these files first:
 
 * Backend DB config: `gerapy/server/server/settings.py`
-  * `DB_SUBDIR = 'dbs'`
-  * `DB_DIR = os.path.join(os.getcwd(), DB_SUBDIR)`
-  * `DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')`
-  * `DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'`
+  * Default `DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'`
+  * Related env vars: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
+  * Optional SQLite compatibility: `DB_ENGINE=django.db.backends.sqlite3`
 * Backend data models: `gerapy/server/core/models.py` (project config, tasks, clients, deploy records)
 * Frontend code: `gerapy/client` (Vue SPA, no standalone persistent DB; data comes from backend APIs)
   * Dev proxy: `gerapy/client/vue.config.js` (default target `http://localhost:8000`)
@@ -61,7 +60,7 @@ If you need to locate database-related paths and config quickly, check these fil
   * Template: `gerapy/templates/spiders/crawl.tmpl`
   * Pipelines: `gerapy/pipelines/mysql.py`, `gerapy/pipelines/mongodb.py`
 
-> Note: Gerapy platform itself (Django) uses SQLite by default. MySQL/MongoDB are used by generated Scrapy projects for item storage, not as Gerapy metadata DB.
+> Note: Gerapy platform itself (Django) uses PostgreSQL by default. MySQL/MongoDB are used by generated Scrapy projects for item storage, not as Gerapy metadata DB.
 
 ### Deployment Plan for Independent Frontend/Backend + DB
 

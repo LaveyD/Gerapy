@@ -49,6 +49,23 @@ cd gerapy
 gerapy migrate
 ```
 
+Gerapy now uses PostgreSQL by default. You can configure it with environment variables before `gerapy migrate`:
+
+```bash
+export DB_ENGINE=django.db.backends.postgresql
+export DB_HOST=127.0.0.1
+export DB_PORT=5432
+export DB_NAME=gerapy
+export DB_USER=gerapy
+export DB_PASSWORD=gerapy
+```
+
+If you need SQLite for local compatibility, set:
+
+```bash
+export DB_ENGINE=django.db.backends.sqlite3
+```
+
 Next you need to create a superuser by this command:
 
 ```
@@ -87,7 +104,7 @@ Just run this command:
 docker-compose up
 ```
 
-Then it will run at port 8000. You can use the temp admin account (username: admin, password: admin) to login. And please change the password later for safety.
+Then it will run at port 8000 with PostgreSQL. You can use the temp admin account (username: admin, password: admin) to login. And please change the password later for safety.
 
 Command Usage:
 
