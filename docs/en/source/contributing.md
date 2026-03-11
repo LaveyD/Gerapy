@@ -80,7 +80,7 @@ Open [http://localhost:8080](http://localhost:8080) to enter Gerapy's frontend p
 
 ## Description
 
-The backend is based on Django development, and the database used is SQLite, whose main logic is in the backend folder.
+The backend is based on Django development and now defaults to PostgreSQL (with `GERAPY_SQLITE_COMPAT=true` for SQLite compatibility mode), whose main logic is in the backend folder.
 
 The front end is based on Vue.js development and its main logic is in the frontend folder.
 

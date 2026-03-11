@@ -39,7 +39,8 @@ cd gerapy
 gerapy migrate
 ```
 
-这样即会生成一个 SQLite 数据库，数据库中会用于保存各个主机配置信息、部署版本、定时任务等。
+默认情况下，Gerapy 使用 PostgreSQL 作为后台元数据库，用于保存各个主机配置信息、部署版本、定时任务等。
+如果需要保持历史 SQLite 行为，请在执行迁移前设置 `GERAPY_SQLITE_COMPAT=true` 开启兼容模式。
 
 这时候可以发现工作目录下又多了一个文件夹：
 
@@ -61,7 +62,7 @@ gerapy migrate
   * 模板：`gerapy/templates/spiders/crawl.tmpl`
   * 管道实现：`gerapy/pipelines/mysql.py`、`gerapy/pipelines/mongodb.py`
 
-> 说明：Gerapy 平台自身（Django）默认只使用 SQLite；MySQL / MongoDB 是给生成后的 Scrapy 项目做数据落地使用，不是 Gerapy 管理后台本身的元数据库。
+> 说明：Gerapy 平台自身（Django）现在默认使用 PostgreSQL；如需 SQLite 请设置 `GERAPY_SQLITE_COMPAT=true` 开启兼容模式。MySQL / MongoDB 是给生成后的 Scrapy 项目做数据落地使用，不是 Gerapy 管理后台本身的元数据库。
 
 ### 前后端数据库拆分独立部署方案
 

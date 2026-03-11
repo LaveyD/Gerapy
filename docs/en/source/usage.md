@@ -39,7 +39,8 @@ At this point, first initialize the database, execute the following command:
 gerapy migrate
 ```
 
-This will generate a SQLite database, which will be used to save each host configuration information, deployment version, timing tasks, and so on.
+By default, Gerapy uses PostgreSQL as backend metadata database, which stores host configurations, deployment versions, timing tasks, and so on.
+If you need legacy SQLite behavior, enable compatibility mode with `GERAPY_SQLITE_COMPAT=true` before running migrations.
 
 At this time, you can find another folder in the working directory:
 
@@ -61,7 +62,7 @@ If you need to locate database-related paths and config quickly, check these fil
   * Template: `gerapy/templates/spiders/crawl.tmpl`
   * Pipelines: `gerapy/pipelines/mysql.py`, `gerapy/pipelines/mongodb.py`
 
-> Note: Gerapy platform itself (Django) uses SQLite by default. MySQL/MongoDB are used by generated Scrapy projects for item storage, not as Gerapy metadata DB.
+> Note: Gerapy platform itself (Django) now defaults to PostgreSQL. Set `GERAPY_SQLITE_COMPAT=true` to use SQLite compatibility mode. MySQL/MongoDB are used by generated Scrapy projects for item storage, not as Gerapy metadata DB.
 
 ### Deployment Plan for Independent Frontend/Backend + DB
 
