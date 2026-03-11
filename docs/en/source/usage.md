@@ -45,6 +45,43 @@ At this time, you can find another folder in the working directory:
 
 * dbs, which is used to store the database required by the Gerapy runtime.
 
+### Frontend/Backend DB Paths and Config Entry Points
+
+If you need to locate database-related paths and config quickly, check these files first:
+
+* Backend DB config: `gerapy/server/server/settings.py`
+  * `DB_SUBDIR = 'dbs'`
+  * `DB_DIR = os.path.join(os.getcwd(), DB_SUBDIR)`
+  * `DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')`
+  * `DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'`
+* Backend data models: `gerapy/server/core/models.py` (project config, tasks, clients, deploy records)
+* Frontend code: `gerapy/client` (Vue SPA, no standalone persistent DB; data comes from backend APIs)
+  * Dev proxy: `gerapy/client/vue.config.js` (default target `http://localhost:8000`)
+* Scrapy project MySQL / MongoDB config:
+  * Template: `gerapy/templates/spiders/crawl.tmpl`
+  * Pipelines: `gerapy/pipelines/mysql.py`, `gerapy/pipelines/mongodb.py`
+
+> Note: Gerapy platform itself (Django) uses SQLite by default. MySQL/MongoDB are used by generated Scrapy projects for item storage, not as Gerapy metadata DB.
+
+### Deployment Plan for Independent Frontend/Backend + DB
+
+1. **Deploy backend (Django) independently**
+   * Run Gerapy Server as an independent service/container.
+   * Persist at least `dbs/`, `projects/`, and `logs/` directories.
+   * Ensure `dbs/db.sqlite3` is on persistent storage.
+2. **Deploy frontend (Vue) independently**
+   * Build in `gerapy/client` with `npm run build`.
+   * Serve static assets via Nginx/CDN.
+   * Reverse proxy `/api/*` to the standalone Gerapy backend.
+3. **DB decoupling (recommended in phases)**
+   * Phase 1: keep SQLite, but isolate `dbs/` to an external persistent volume.
+   * Phase 2: migrate Django `DATABASES` from SQLite to MySQL/PostgreSQL in `gerapy/server/server/settings.py`, then run migrations.
+   * Phase 3: keep project-level item storage in MySQL/MongoDB as configured in generated spider settings.
+4. **Network/security baseline**
+   * Expose only static frontend publicly; protect backend APIs behind gateway/auth.
+   * Restrict DB access to backend network only.
+   * Disable debug mode in production (`APP_DEBUG=false`).
+
 ## New User
 
 Gerapy has login authentication turned on by default, so you need to set up an admin user before starting the service.

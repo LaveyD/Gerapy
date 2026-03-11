@@ -45,6 +45,44 @@ gerapy migrate
 
 * dbs，用于存放 Gerapy 运行时所需的数据库。
 
+### 前后端数据库目录与配置定位
+
+如果需要排查 Gerapy 的前后端数据库位置和配置，可以直接看下面几个文件：
+
+* 后端数据库配置文件：`gerapy/server/server/settings.py`
+  * `DB_SUBDIR = 'dbs'`
+  * `DB_DIR = os.path.join(os.getcwd(), DB_SUBDIR)`
+  * `DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')`
+  * `DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'`
+* 后端业务数据模型：`gerapy/server/core/models.py`（项目配置、任务、主机、部署记录等都在这里对应的表里）
+* 前端代码目录：`gerapy/client`，前端是 Vue 单页应用，不单独持久化数据库，数据通过 `/api/*` 请求后端
+  * 开发代理配置：`gerapy/client/vue.config.js`（默认代理到 `http://localhost:8000`）
+* 爬虫项目的 MySQL / MongoDB 配置来源：
+  * 模板：`gerapy/templates/spiders/crawl.tmpl`
+  * 管道实现：`gerapy/pipelines/mysql.py`、`gerapy/pipelines/mongodb.py`
+
+> 说明：Gerapy 平台自身（Django）默认只使用 SQLite；MySQL / MongoDB 是给生成后的 Scrapy 项目做数据落地使用，不是 Gerapy 管理后台本身的元数据库。
+
+### 前后端数据库拆分独立部署方案
+
+如果你希望“前后端分离 + 数据库独立部署”，可以按下面方案落地：
+
+1. **后端（Django）独立部署**
+   * 单独部署 Gerapy Server（可用容器或进程方式）。
+   * 持久化挂载工作目录，至少保留 `dbs/`、`projects/`、`logs/` 三个目录。
+   * 重点保证 `dbs/db.sqlite3` 持久化（容器重建不丢数据）。
+2. **前端（Vue）独立部署**
+   * 在 `gerapy/client` 执行 `npm run build`，将静态文件部署到 Nginx/CDN。
+   * 将前端 API 请求统一反向代理到独立部署的 Gerapy Server（`/api/*`）。
+3. **数据库独立化演进（推荐分阶段）**
+   * 第 1 阶段：先保持 SQLite，但把 `dbs/` 放到独立持久化卷，完成与前端的部署解耦。
+   * 第 2 阶段：将 Django `DATABASES` 从 SQLite 切换到 MySQL/PostgreSQL（在 `gerapy/server/server/settings.py` 改为对应 `ENGINE/HOST/PORT/USER/PASSWORD/NAME`），然后执行迁移。
+   * 第 3 阶段：Scrapy 业务数据继续按项目维度使用 MySQL/MongoDB（由项目配置生成到 `crawl.tmpl`）。
+4. **网络与安全建议**
+   * 前端只暴露静态站点；后端 API 通过网关暴露并加鉴权。
+   * 数据库只允许后端所在网段访问，不直接暴露公网。
+   * 生产环境关闭调试模式（`APP_DEBUG=false`）。
+
 ## 新建用户
 
 Gerapy 默认开启了登录验证，因此需要在启动服务前设置一个管理员用户，
@@ -172,4 +210,3 @@ gerapy runserver 0.0.0.0:8000 > /dev/null 2>&1 &
 以上便是 Gerapy 的基本用法介绍。
 
 如果您有发现错误，或者您对 Gerapy 有任何建议，欢迎到 [Gerapy Issues](https://github.com/Gerapy/Gerapy/issues) 发表，非常感谢您的支持。您的反馈和建议非常宝贵，希望您的参与能帮助 Gerapy 做得更好。
-
