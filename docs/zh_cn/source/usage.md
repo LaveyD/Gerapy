@@ -83,6 +83,41 @@ gerapy migrate
    * 数据库只允许后端所在网段访问，不直接暴露公网。
    * 生产环境关闭调试模式（`APP_DEBUG=false`）。
 
+### SQLite 迁移到 PostgreSQL（方案二：逻辑导出/导入）
+
+如果你不想直接做 SQLite 文件级转换，可以使用 Django 自带的逻辑迁移方式：
+
+1. **在 SQLite 侧导出业务数据**
+   * 在当前工作目录执行：
+   ```
+   python -m gerapy.server.manage dumpdata \
+     --natural-foreign --natural-primary \
+     --exclude contenttypes --exclude auth.permission \
+     > gerapy_data.json
+   ```
+2. **切换数据库配置到 PostgreSQL**
+   * 修改 `gerapy/server/server/settings.py` 的 `DATABASES['default']`，示例：
+   ```
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql',
+           'HOST': '127.0.0.1',
+           'PORT': 5432,
+           'NAME': 'gerapy',
+           'USER': 'gerapy',
+           'PASSWORD': 'your_password',
+       }
+   }
+   ```
+   * 安装 PostgreSQL 驱动（任选其一）：`pip install psycopg2-binary` 或 `pip install psycopg2`。
+3. **在 PostgreSQL 初始化表结构并导入数据**
+   * 执行迁移：`gerapy migrate`
+   * 导入数据：`python -m gerapy.server.manage loaddata gerapy_data.json`
+4. **校验迁移结果**
+   * 执行 `gerapy createsuperuser`（如需补建管理员）并登录页面验证主机、项目、任务等配置是否完整。
+
+> 说明：逻辑导出/导入方案对跨数据库（SQLite -> PostgreSQL）更稳妥；若数据量很大，建议先在预发布环境演练并分批迁移。
+
 ## 新建用户
 
 Gerapy 默认开启了登录验证，因此需要在启动服务前设置一个管理员用户，
