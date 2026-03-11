@@ -34,16 +34,16 @@ This installs the development version of Gerapy, and if Gerapy was previously in
 
 The gerapy command can be used after the installation is complete.
 
-Then install the front-end dependencies, the front-end code is in the gerapy/client folder, based on Vue.js development.
+Then install the front-end dependencies, the front-end code is in the frontend folder, based on Vue.js development.
 
 Go into the directory and install dependencies.
 
 ```
-cd gerapy/client
+cd frontend
 npm install
 ```
 
-This will generate a node_modules folder under gerapy/client.
+This will generate a node_modules folder under frontend.
 
 ## Run
 
@@ -68,7 +68,7 @@ After starting in this way, Gerapy Server will run on port 5000, and the console
 
 ### Frontend
 
-For the frontend, in the gerapy/client folder, execute:
+For the frontend, in the frontend folder, execute:
 
 ```
 npm run serve
@@ -80,9 +80,9 @@ Open [http://localhost:8080](http://localhost:8080) to enter Gerapy's frontend p
 
 ## Description
 
-The backend is based on Django development, and the database used is SQLite, whose main logic is in the gerapy/server folder.
+The backend is based on Django development, and the database used is SQLite, whose main logic is in the backend folder.
 
-The front end is based on Vue.js development and its main logic is in the gerapy/client folder.
+The front end is based on Vue.js development and its main logic is in the frontend folder.
 
 ## Code Release
 
@@ -92,7 +92,7 @@ After the frontend modification is completed, if you want to officially release 
 npm run build
 ```
 
-The result of the build will go to the backend's gerapy/server/core/templates folder.
+The result of the build will go to the backend's backend/core/templates folder.
 
 The release of the backend code can be executed directly:
 

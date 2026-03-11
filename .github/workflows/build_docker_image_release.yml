@@ -17,7 +17,7 @@ jobs:
         version: 14.x
     - name: Build Frontend Source
       run: |
-        cd gerapy/client
+        cd frontend
         npm install -g yarn
         yarn 
         yarn build

@@ -4,7 +4,7 @@ import sys
 
 
 def manage():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gerapy.server.server.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.server.settings')
     os.environ.setdefault('RUN_MAIN', 'true')
     try:
         from django.core.management import execute_from_command_line

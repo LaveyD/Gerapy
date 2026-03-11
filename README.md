@@ -10,6 +10,12 @@
 
 Distributed Crawler Management Framework Based on Scrapy, Scrapyd, Scrapyd-Client, Scrapyd-API, Django and Vue.js.
 
+## Project Structure
+
+- `frontend/`: Vue frontend source code
+- `backend/`: Django backend source code
+- `gerapy/`: CLI, spider templates, and shared modules
+
 ## Documentation
 
 Documentation is available online at [https://docs.gerapy.com/](https://docs.gerapy.com/) and [https://github.com/Gerapy/Docs](https://github.com/Gerapy/Docs).

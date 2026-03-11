@@ -3,7 +3,7 @@ from furl import furl
 from scrapy.spiders import CrawlSpider as BaseSpider, signals
 from scrapy_splash import SplashRequest
 from scrapy import Request
-from gerapy.server.core.utils import str2list, str2dict, str2body
+from backend.core.utils import str2list, str2dict, str2body
 from scrapy.spiders.crawl import Rule as BaseRule
 
 

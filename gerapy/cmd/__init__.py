@@ -1,6 +1,6 @@
 import sys
 from gerapy import version
-from gerapy.server.core.utils import str2bool, str2str, str2json, str2body
+from backend.core.utils import str2bool, str2str, str2json, str2body
 import argparse
 
 optional_title = 'Optional arguments'
@@ -167,7 +167,7 @@ def cmd():
         from gerapy.cmd.initadmin import initadmin
         initadmin()
     else:
-        from gerapy.server.manage import manage
+        from backend.manage import manage
         manage()
 
 

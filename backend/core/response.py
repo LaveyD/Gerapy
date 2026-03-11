@@ -2,7 +2,7 @@ import json
 
 from django.http import HttpResponse
 
-from gerapy.server.core.encoder import JSONEncoder
+from backend.core.encoder import JSONEncoder
 
 
 class JsonResponse(HttpResponse):

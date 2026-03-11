@@ -9,7 +9,7 @@ def initadmin():
     create super user
     :return:
     """
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gerapy.server.server.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.server.settings")
     django.setup()
     from django.contrib.auth.models import User
     

@@ -1,5 +1,5 @@
 from os.path import join
-from gerapy.server.core.parser import get_start_requests, get_follow_requests_and_items
+from backend.core.parser import get_start_requests, get_follow_requests_and_items
 import json
 
 
