@@ -92,13 +92,20 @@ DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')
 
 
 def str2bool(value, default=False):
+    """
+    Convert env-like string values to bool.
+    """
     if value is None:
         return default
     return str(value).lower() in ('1', 'true', 'yes', 'on')
 
 
 SQLITE_COMPAT_MODE = str2bool(os.getenv('GERAPY_SQLITE_COMPAT'))
+# Keep explicit engine override for users who prefer env-driven backend selection.
 DB_ENGINE = os.getenv('GERAPY_DB_ENGINE', 'postgresql').lower()
+# Normalize unsupported values to PostgreSQL so the fallback path is explicit.
+if DB_ENGINE not in ('postgresql', 'sqlite'):
+    DB_ENGINE = 'postgresql'
 
 if SQLITE_COMPAT_MODE or DB_ENGINE == 'sqlite':
     DATABASES = {
