@@ -1,5 +1,5 @@
 module.exports = {
-  outputDir: "../server/core/templates",
+  outputDir: "../backend/core/templates",
   assetsDir: "static",
   devServer: {
     host: "0.0.0.0",

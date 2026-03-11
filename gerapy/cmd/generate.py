@@ -7,9 +7,9 @@ def generate(project):
     :param project:
     :return:
     """
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gerapy.server.server.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.server.settings')
     # os.environ.setdefault('RUN_MAIN', 'true')
     import django
     django.setup()
-    from gerapy.server.core.utils import generate_project
+    from backend.core.utils import generate_project
     generate_project(project)

@@ -34,16 +34,16 @@ python3 setup.py install
 
 安装完成之后便可以使用 gerapy 命令。
 
-然后安装前端依赖，前端代码在 gerapy/client 文件夹，基于 Vue.js 开发。
+然后安装前端依赖，前端代码在 frontend 文件夹，基于 Vue.js 开发。
 
 进入目录，然后安装依赖。
 
 ```
-cd gerapy/client
+cd frontend
 npm install
 ```
 
-这样会在 gerapy/client 下生成一个 node_modules 文件夹。
+这样会在 frontend 下生成一个 node_modules 文件夹。
 
 ## 运行
 
@@ -68,7 +68,7 @@ npm install
 
 ### 前端
 
-对于前端，在 gerapy/client 文件夹，执行：
+对于前端，在 frontend 文件夹，执行：
 
 ```
 npm run serve
@@ -80,9 +80,9 @@ npm run serve
 
 ## 代码说明
 
-后端基于 Django 开发，使用的数据库为 SQLite，其主要逻辑在 gerapy/server 文件夹。
+后端基于 Django 开发，使用的数据库为 SQLite，其主要逻辑在 backend 文件夹。
 
-前端基于 Vue.js 开发，其主要逻辑在 gerapy/client 文件夹。
+前端基于 Vue.js 开发，其主要逻辑在 frontend 文件夹。
 
 ## 代码发布
 
@@ -92,7 +92,7 @@ npm run serve
 npm run build
 ```
 
-其 build 结果会进入后端的 gerapy/server/core/templates 文件夹。
+其 build 结果会进入后端的 backend/core/templates 文件夹。
 
 后端代码的发布可以直接执行：
 

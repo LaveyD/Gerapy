@@ -49,14 +49,14 @@ gerapy migrate
 
 如果需要排查 Gerapy 的前后端数据库位置和配置，可以直接看下面几个文件：
 
-* 后端数据库配置文件：`gerapy/server/server/settings.py`
+* 后端数据库配置文件：`backend/server/settings.py`
   * `DB_SUBDIR = 'dbs'`
   * `DB_DIR = os.path.join(os.getcwd(), DB_SUBDIR)`
   * `DB_PATH = os.path.join(DB_DIR, 'db.sqlite3')`
   * `DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'`
-* 后端业务数据模型：`gerapy/server/core/models.py`（项目配置、任务、主机、部署记录等都在这里对应的表里）
-* 前端代码目录：`gerapy/client`，前端是 Vue 单页应用，不单独持久化数据库，数据通过 `/api/*` 请求后端
-  * 开发代理配置：`gerapy/client/vue.config.js`（默认代理到 `http://localhost:8000`）
+* 后端业务数据模型：`backend/core/models.py`（项目配置、任务、主机、部署记录等都在这里对应的表里）
+* 前端代码目录：`frontend`，前端是 Vue 单页应用，不单独持久化数据库，数据通过 `/api/*` 请求后端
+  * 开发代理配置：`frontend/vue.config.js`（默认代理到 `http://localhost:8000`）
 * 爬虫项目的 MySQL / MongoDB 配置来源：
   * 模板：`gerapy/templates/spiders/crawl.tmpl`
   * 管道实现：`gerapy/pipelines/mysql.py`、`gerapy/pipelines/mongodb.py`
@@ -72,11 +72,11 @@ gerapy migrate
    * 持久化挂载工作目录，至少保留 `dbs/`、`projects/`、`logs/` 三个目录。
    * 重点保证 `dbs/db.sqlite3` 持久化（容器重建不丢数据）。
 2. **前端（Vue）独立部署**
-   * 在 `gerapy/client` 执行 `npm run build`，将静态文件部署到 Nginx/CDN。
+   * 在 `frontend` 执行 `npm run build`，将静态文件部署到 Nginx/CDN。
    * 将前端 API 请求统一反向代理到独立部署的 Gerapy Server（`/api/*`）。
 3. **数据库独立化演进（推荐分阶段）**
    * 第 1 阶段：先保持 SQLite，但把 `dbs/` 放到独立持久化卷，完成与前端的部署解耦。
-   * 第 2 阶段：将 Django `DATABASES` 从 SQLite 切换到 MySQL/PostgreSQL（在 `gerapy/server/server/settings.py` 改为对应 `ENGINE/HOST/PORT/USER/PASSWORD/NAME`），然后执行迁移。
+   * 第 2 阶段：将 Django `DATABASES` 从 SQLite 切换到 MySQL/PostgreSQL（在 `backend/server/settings.py` 改为对应 `ENGINE/HOST/PORT/USER/PASSWORD/NAME`），然后执行迁移。
    * 第 3 阶段：Scrapy 业务数据继续按项目维度使用 MySQL/MongoDB（由项目配置生成到 `crawl.tmpl`）。
 4. **网络与安全建议**
    * 前端只暴露静态站点；后端 API 通过网关暴露并加鉴权。
@@ -90,13 +90,13 @@ gerapy migrate
 1. **在 SQLite 侧导出业务数据**
    * 在当前工作目录执行：
    ```
-   python -m gerapy.server.manage dumpdata \
+   python -m backend.manage dumpdata \
      --natural-foreign --natural-primary \
      --exclude contenttypes --exclude auth.permission \
      > gerapy_data.json
    ```
 2. **切换数据库配置到 PostgreSQL**
-   * 修改 `gerapy/server/server/settings.py` 的 `DATABASES['default']`，示例：
+   * 修改 `backend/server/settings.py` 的 `DATABASES['default']`，示例：
    ```
    DATABASES = {
        'default': {
@@ -112,7 +112,7 @@ gerapy migrate
    * 安装 PostgreSQL 驱动（任选其一）：`pip install psycopg2-binary` 或 `pip install psycopg2`。
 3. **在 PostgreSQL 初始化表结构并导入数据**
    * 执行迁移：`gerapy migrate`
-   * 导入数据：`python -m gerapy.server.manage loaddata gerapy_data.json`
+   * 导入数据：`python -m backend.manage loaddata gerapy_data.json`
 4. **校验迁移结果**
    * 执行 `gerapy createsuperuser`（如需补建管理员）并登录页面验证主机、项目、任务等配置是否完整。
 

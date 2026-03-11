@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'gerapy.server.core',
+    'backend.core',
     'django_apscheduler',
     'corsheaders'
 ]
@@ -47,7 +47,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'gerapy.server.core.middlewares.TransformMiddleware',
+    # 'backend.core.middlewares.TransformMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -59,7 +59,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-ROOT_URLCONF = 'gerapy.server.server.urls'
+ROOT_URLCONF = 'backend.server.urls'
 
 TEMPLATES = [
     {
@@ -77,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'gerapy.server.server.wsgi.application'
+WSGI_APPLICATION = 'backend.server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases

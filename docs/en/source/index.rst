@@ -7,6 +7,7 @@ Welcome to Gerapy's Documentation!
    Introduction<introduction>
    Installation<installation>
    Usage<usage>
+   Separate Deployment<deployment_separated>
    Docker<docker>
    Contributing<contributing>
    Maintainers<maintainers>

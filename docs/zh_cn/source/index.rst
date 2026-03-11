@@ -7,6 +7,7 @@ Gerapy 官方中文文档
    介绍<introduction>
    安装<installation>
    使用<usage>
+   前后端分离部署<deployment_separated>
    Docker<docker>
    贡献<contributing>
    作者<maintainers>

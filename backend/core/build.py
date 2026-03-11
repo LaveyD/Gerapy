@@ -7,7 +7,7 @@ import errno
 
 from gerapy import get_logger
 from gerapy.cmd.init import PROJECTS_FOLDER
-from gerapy.server.core.config import config
+from backend.core.config import config
 from os.path import join
 from subprocess import check_call
 

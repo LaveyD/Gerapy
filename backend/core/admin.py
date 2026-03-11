@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from gerapy.server.core.models import Client, Project, Monitor
+from backend.core.models import Client, Project, Monitor
 
 
 class ClientAdmin(admin.ModelAdmin):

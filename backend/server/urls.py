@@ -19,10 +19,10 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('gerapy.server.core.urls')),
+    url(r'^', include('backend.core.urls')),
 ]
 
 if 'runserver' in sys.argv:
     # start scheduler
-    from gerapy.server.core.scheduler import sm
+    from backend.core.scheduler import sm
     sm.start()

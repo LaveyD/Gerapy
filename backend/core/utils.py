@@ -374,7 +374,7 @@ def generate_project(project_name):
     :return: project data
     """
     # get configuration
-    from gerapy.server.core.models import Project
+    from backend.core.models import Project
     configuration = Project.objects.get(name=project_name).configuration
     configuration = json.loads(configuration)
     # remove original project dir
@@ -433,7 +433,7 @@ def clients_of_task(task):
     :param task: task object
     :return:
     """
-    from gerapy.server.core.models import Client
+    from backend.core.models import Client
     client_ids = json.loads(task.clients)
     for client_id in client_ids:
         client = Client.objects.get(id=client_id)

@@ -20,12 +20,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from subprocess import Popen, PIPE
 from gerapy import get_logger
-from gerapy.server.core.response import JsonResponse
+from backend.core.response import JsonResponse
 from gerapy.cmd.init import PROJECTS_FOLDER
-from gerapy.server.server.settings import TIME_ZONE
-from gerapy.server.core.models import Client, Project, Deploy, Monitor, Task
-from gerapy.server.core.build import build_project, find_egg
-from gerapy.server.core.utils import IGNORES, is_in_curdir, scrapyd_url, log_url, get_tree, get_scrapyd, process_html, bytes2str, \
+from backend.server.settings import TIME_ZONE
+from backend.core.models import Client, Project, Deploy, Monitor, Task
+from backend.core.build import build_project, find_egg
+from backend.core.utils import IGNORES, is_in_curdir, scrapyd_url, log_url, get_tree, get_scrapyd, process_html, bytes2str, \
     clients_of_task, get_job_id, log_exception
 from django_apscheduler.models import DjangoJob, DjangoJobExecution
 from django.core.files.storage import FileSystemStorage

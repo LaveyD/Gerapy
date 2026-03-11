@@ -7,7 +7,7 @@ from scrapy.http import Request
 from scrapy.item import BaseItem
 from scrapy.utils.spider import iterate_spider_output
 from gerapy import get_logger
-from gerapy.server.core.utils import process_request, process_response, process_item
+from backend.core.utils import process_request, process_response, process_item
 
 logger = get_logger(__name__)
 

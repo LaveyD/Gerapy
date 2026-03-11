@@ -6,6 +6,10 @@ authors = ["Germey <cqc@cuiqingcai.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/Gerapy/Gerapy"
+packages = [
+    { include = "gerapy" },
+    { include = "backend" }
+]
 include = [
     "LICENSE"
 ]
