@@ -23,3 +23,17 @@ SCHEDULER_HEARTBEAT = 3
 ADMINS = [
     'admin'
 ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'riskmind',
+        'USER': 'postgres',
+        'PASSWORD': 'A123456',
+        'HOST': '10.6.200.9',
+        'PORT': '5432',
+        'OPTIONS': {
+            'options': '-c timezone=UTC'
+        }
+    }
+}

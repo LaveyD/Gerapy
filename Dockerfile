@@ -1,7 +1,11 @@
-FROM python:3.10-slim AS build
+ARG PYTHON_IMAGE=python:3.10-slim
+FROM ${PYTHON_IMAGE} AS build
 ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /app
-COPY . /app
+COPY pyproject.toml README.md LICENSE /app/
+COPY poetry.lock /app/
+COPY gerapy /app/gerapy
+COPY backend /app/backend
 # Install poetry
 RUN set -eux; \
     apt-get update; \
@@ -14,21 +18,21 @@ RUN set -eux; \
     poetry build --format wheel
 
 
-FROM python:3.10-slim
+FROM ${PYTHON_IMAGE}
 # Install gerapy
-ENV GERAPY_HOME_DIR ${GERAPY_HOME_DIR:-/home/gerapy}
-ENV GERAPY_GROUP ${GERAPY_GROUP:-gerapy}
-ENV GERAPY_GID ${GERAPY_GID:-10000}
-ENV GERAPY_USER ${GERAPY_USER:-gerapy}
-ENV GERAPY_UID ${GERAPY_UID:-10000}
-ENV GERAPY_PORT ${GERAPY_PORT:-8000}
+ENV GERAPY_HOME_DIR=/home/gerapy \
+    GERAPY_GROUP=gerapy \
+    GERAPY_GID=10000 \
+    GERAPY_USER=gerapy \
+    GERAPY_UID=10000 \
+    GERAPY_PORT=8000
 WORKDIR $GERAPY_HOME_DIR
 COPY --from=build /app/dist/gerapy-*.whl /tmp/
 RUN \
     set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends tini gosu; \
-    pip install /tmp/gerapy-*.whl; \
+    pip install /tmp/gerapy-*.whl psycopg2-binary; \
     rm -f /tmp/gerapy-*.whl; \
     mkdir -p $GERAPY_HOME_DIR; \
     addgroup --gid $GERAPY_GID $GERAPY_GROUP; \

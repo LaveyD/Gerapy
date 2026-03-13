@@ -4,7 +4,10 @@ services:
 
   gerapy:
     image: germey/gerapy
-    build: .
+    build:
+      context: .
+      args:
+        PYTHON_IMAGE: ${PYTHON_IMAGE:-python:3.10-slim}
     container_name: gerapy
     restart: always
     volumes:
